@@ -176,4 +176,4 @@ class pcapSummary:
 
 if __name__ == "__main__":
     #sniff(prn=test_pktfeaturizer)
-    pcapSummary().run("../smartthings_bg.pcap")
+    pcapSummary().run("../data/smartthings_bg.pcap")
