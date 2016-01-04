@@ -214,5 +214,5 @@ if __name__ == "__main__":
                 print "Usage: python {} -r pcapFile".format(sys.argv[0])
         else:
             print "Usage: python {} -r pcapFile".format(sys.argv[0])
-    return
-
+    else:
+        print "Usage: python {} -r pcapFile".format(sys.argv[0])
