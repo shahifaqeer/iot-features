@@ -1,0 +1,62 @@
+--Summary--
+[Pkt Type]
+Feature: Counter { feature_value: packet_count, ... }
+------
+
+<class 'scapy.layers.dns.DNS'>
+DNS question-class :  Counter({1: 35})
+DNS question-count :  Counter({1: 35})
+DNS question-name :  Counter({'log-rts04-iad01.devices.nest.com.': 20, 'transport01-rts04-iad01.transport.home.nest.com.': 10, 'weather.nest.com.': 5})
+DNS question-type :  Counter({1: 35})
+DNS recursion-desired :  Counter({1L: 35})
+Ether dst :  Counter({'a4:4e:31:99:b5:7c': 21, '18:b4:30:14:52:1d': 14})
+Ether src :  Counter({'18:b4:30:14:52:1d': 21, 'a4:4e:31:99:b5:7c': 14})
+Ether type :  Counter({2048: 35})
+IP dst :  Counter({'10.0.0.7': 14, '10.0.0.1': 7, '8.8.8.8': 7, '8.8.4.4': 7})
+IP len :  Counter({78: 12, 184: 8, 93: 6, 160: 4, 62: 3, 183: 2})
+IP src :  Counter({'10.0.0.7': 21, '8.8.4.4': 7, '8.8.8.8': 7})
+UDP dport :  Counter({53: 21, 54040: 7, 59430: 7})
+UDP len :  Counter({58: 12, 164: 8, 73: 6, 140: 4, 42: 3, 163: 2})
+UDP sport :  Counter({53: 14, 59430: 7, 54040: 7, 37961: 1, 56364: 1, 41240: 1, 36851: 1, 55796: 1, 36857: 1, 45396: 1})
+
+
+<class 'scapy.layers.inet.ICMP'>
+Ether dst :  Counter({'18:b4:30:14:52:1d': 7})
+Ether src :  Counter({'a4:4e:31:99:b5:7c': 7})
+Ether type :  Counter({2048: 7})
+ICMP code :  Counter({3: 7})
+ICMP type :  Counter({3: 7})
+IP dst :  Counter({'10.0.0.7': 7})
+IP len :  Counter({106: 4, 121: 2, 90: 1})
+IP src :  Counter({'10.0.0.1': 7})
+
+
+<class 'scapy.layers.l2.ARP'>
+ARP hwdst :  Counter({'a4:4e:31:99:b5:7c': 53, '00:00:00:00:00:00': 53})
+ARP hwsrc :  Counter({'a4:4e:31:99:b5:7c': 53, '18:b4:30:14:52:1d': 53})
+ARP hwtype :  Counter({1: 106})
+ARP pdst :  Counter({'10.0.0.7': 53, '10.0.0.1': 53})
+ARP psrc :  Counter({'10.0.0.7': 53, '10.0.0.1': 53})
+ARP ptype :  Counter({2048: 106})
+Ether dst :  Counter({'a4:4e:31:99:b5:7c': 53, '18:b4:30:14:52:1d': 53})
+Ether src :  Counter({'a4:4e:31:99:b5:7c': 53, '18:b4:30:14:52:1d': 53})
+Ether type :  Counter({2054: 106})
+
+
+<class 'scapy.layers.l2.Ether'>
+Ether dst :  Counter({'a4:4e:31:99:b5:7c': 5, '18:b4:30:14:52:1d': 5})
+Ether src :  Counter({'a4:4e:31:99:b5:7c': 5, '18:b4:30:14:52:1d': 5})
+Ether type :  Counter({34958: 10})
+
+
+<class 'scapy.layers.inet.TCP'>
+Ether dst :  Counter({'a4:4e:31:99:b5:7c': 181, '18:b4:30:14:52:1d': 173})
+Ether src :  Counter({'18:b4:30:14:52:1d': 181, 'a4:4e:31:99:b5:7c': 173})
+Ether type :  Counter({2048: 354})
+IP dst :  Counter({'10.0.0.7': 173, '50.19.139.51': 85, '23.21.198.82': 62, '174.129.14.187': 17, '75.101.149.71': 17})
+IP len :  Counter({52: 156, 40: 44, 1500: 34, 60: 20, 137: 10, 569: 10, 583: 10, 83: 10, 64: 6, 159: 5, 301: 5, 178: 5, 103: 5, 1252: 4, 245: 4, 233: 3, 662: 2, 1471: 2, 345: 2, 478: 2, 1281: 1, 235: 1, 399: 1, 494: 1, 537: 1, 297: 1, 1454: 1, 314: 1, 1219: 1, 718: 1, 489: 1, 306: 1, 750: 1, 105: 1, 1148: 1})
+IP src :  Counter({'10.0.0.7': 181, '50.19.139.51': 97, '23.21.198.82': 46, '75.101.149.71': 18, '174.129.14.187': 12})
+TCP dport :  Counter({443: 96, 9543: 85, 58566: 35, 43719: 27, 45831: 18, 36345: 18, 36348: 14, 58077: 14, 38948: 12, 56028: 12, 50939: 9, 56023: 8, 48501: 6})
+TCP sport :  Counter({9543: 97, 443: 76, 43719: 22, 36345: 22, 58566: 20, 36348: 20, 58077: 20, 38948: 17, 45831: 17, 56028: 15, 50939: 10, 56023: 10, 48501: 8})
+
+
