@@ -191,7 +191,7 @@ class pcapSummary:
             for feature_name, feature_list in feature.iteritems():
                 feature_summary = Counter(feature_list)
                 self.pcap_summary[pkt_type][feature_name] = feature_summary
-                print feature_name, feature_summary
+                print feature_name, ": ", feature_summary
 
             print "\n"
 
