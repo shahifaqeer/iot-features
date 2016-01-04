@@ -1,5 +1,6 @@
 from scapy.all import *
 import time
+from collections import defaultdict, Counter
 
 
 class PktFeaturizer:
@@ -93,12 +94,15 @@ class PktFeaturizer:
             ip_features = {
                 "IP src": pkt[IP].src,
                 "IP dst": pkt[IP].dst,
+                "IP len": pkt[IP].len,
                 }
         else:
             ip_features = {
                 "IP src": pkt[IPv6].src,
                 "IP dst": pkt[IPv6].dst,
+                "IP len": pkt[IPv6].len
                 }
+
         if pkt.haslayer(Ether):
             ip_features.update(self.Etherfeatures(pkt))
         if pkt.haslayer(Dot3):
@@ -156,6 +160,8 @@ def test_pktfeaturizer(pkt):
 class pcapSummary:
 
     def __init__(self):
+        self.pkt_type_features = defaultdict(int)
+        self.pcap_summary = defaultdict(int)
         pass
 
     def identify_device(self, pkt):
@@ -166,14 +172,33 @@ class pcapSummary:
         features = PktFeaturizer(pkt)
         #print features.pkt_type, features.features
 
-    def print_summary(self):
-        pass
+        if features.pkt_type not in self.pkt_type_features:
+            self.pkt_type_features[features.pkt_type] = defaultdict(list)
+
+        for feature_name, feature_value in features.features.iteritems():
+            self.pkt_type_features[features.pkt_type][feature_name].append(feature_value)
+        return
+
+    def summarize(self):
+        for pkt_type, feature in self.pkt_type_features.iteritems():
+
+            self.pcap_summary[pkt_type] = defaultdict(list)
+            print pkt_type
+
+            for feature_name, feature_list in feature.iteritems():
+                feature_summary = Counter(feature_list)
+                self.pcap_summary[pkt_type][feature_name] = feature_summary
+                print feature_name, feature_summary
+
+            print "\n"
+
+        return
 
     def run(self, pcap_file):
         sniff(offline=pcap_file, store=0, prn=self.pkt_feature)
-        print "--summary--"
-        self.print_summary()
+        print "--summary--\n"
+        self.summarize()
 
 if __name__ == "__main__":
     #sniff(prn=test_pktfeaturizer)
-    pcapSummary().run("../data/smartthings_bg.pcap")
+    pcapSummary().run("/Users/sgrover/Projects/IoT/IoT-dumps/smartthings/1447984949.pcap")
