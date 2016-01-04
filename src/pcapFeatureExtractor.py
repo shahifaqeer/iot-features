@@ -2,6 +2,7 @@ from __future__ import division
 from scapy.all import *
 import time, sys
 from collections import defaultdict, Counter
+from pprint import pprint
 
 
 class PktFeaturizer:
@@ -64,9 +65,11 @@ class PktFeaturizer:
         return stp_features
 
     def DHCPfeatures(self, pkt):
-        dhcp_features = {
-            "DHCP options": pkt[DHCP].options
-            }
+        dhcp_features = {}
+        for option in pkt[DHCP].options:
+            if len(option)==2:
+                dhcp_features.update({"DHCP "+option[0] : option[1]})
+
         if pkt.haslayer(UDP):
             dhcp_features.update(self.UDPfeatures(pkt))
         return dhcp_features
@@ -101,7 +104,7 @@ class PktFeaturizer:
             ip_features = {
                 "IP src": pkt[IPv6].src,
                 "IP dst": pkt[IPv6].dst,
-                "IP len": pkt[IPv6].len
+                "IP plen": pkt[IPv6].plen
                 }
 
         if pkt.haslayer(Ether):
@@ -188,8 +191,13 @@ class pcapSummary:
             self.pcap_summary[pkt_type] = defaultdict(list)
             print pkt_type
 
-            for feature_name, feature_list in feature.iteritems():
-                feature_summary = Counter(feature_list)
+            for feature_name, feature_list in sorted(feature.iteritems()):
+                try:
+                    feature_summary = Counter(feature_list)
+                except TypeError:
+                    print "unhashable list"
+                    print feature_list
+                    feature_summary = feature_list
                 self.pcap_summary[pkt_type][feature_name] = feature_summary
                 print feature_name, ": ", feature_summary
 
