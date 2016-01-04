@@ -169,6 +169,7 @@ class pcapSummary:
         return pkt.src
 
     def pkt_feature(self, pkt):
+        """for each packet type: save each feature name and append feature value to that feature name list"""
         device_id = self.identify_device(pkt)
         features = PktFeaturizer(pkt)
         #print features.pkt_type, features.features
@@ -181,6 +182,7 @@ class pcapSummary:
         return
 
     def summarize(self):
+        """print pcap summary by counting all features per packet type"""
         for pkt_type, feature in self.pkt_type_features.iteritems():
 
             self.pcap_summary[pkt_type] = defaultdict(list)
@@ -197,7 +199,11 @@ class pcapSummary:
 
     def run(self, pcap_file):
         sniff(offline=pcap_file, store=0, prn=self.pkt_feature)
-        print "--summary--\n"
+        print "--Summary--"
+        print "[Pkt Type]"
+        print "Feature: Counter { feature_value: packet_count, ... }"
+        print "------\n"
+
         self.summarize()
 
 if __name__ == "__main__":
