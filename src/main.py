@@ -1,3 +1,6 @@
+import sys
+from counterLog import CounterLog
+
 if __name__ == "__main__":
     #sniff(prn=test_pktfeaturizer)
 
@@ -7,7 +10,7 @@ if __name__ == "__main__":
         elif sys.argv[1] == "-r":
             try:
                 pcap = sys.argv[2]
-                pcapSummary().run(pcap)
+                CounterLog().run(pcap)
             except:
                 print "Usage: python {} -r pcapFile".format(sys.argv[0])
         else:

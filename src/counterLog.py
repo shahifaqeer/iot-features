@@ -4,9 +4,10 @@ import numpy as np
 import time, sys
 from collections import defaultdict, Counter
 from pprint import pprint
+from pktFeaturizer import PktFeaturizer
 
 
-class counterLog:
+class CounterLog:
 
     def __init__(self):
         self.pkt_type_features = defaultdict(int)
@@ -59,19 +60,16 @@ class counterLog:
 
         self.summarize()
 
-if __name__ == "__main__":
-    #sniff(prn=test_pktfeaturizer)
 
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "--help":
-            print "Usage: python {} -r pcapFile".format(sys.argv[0])
-        elif sys.argv[1] == "-r":
-            try:
-                pcap = sys.argv[2]
-                pcapSummary().run(pcap)
-            except:
-                print "Usage: python {} -r pcapFile".format(sys.argv[0])
-        else:
-            print "Usage: python {} -r pcapFile".format(sys.argv[0])
+def test_counterlog(pcap=None):
+    if pcap is None:
+        pcap = '../data/nest_bg_short.pcap'
+
+    if os.path.isfile(pcap):
+        CounterLog().run(pcap)
     else:
-        print "Usage: python {} -r pcapFile".format(sys.argv[0])
+        print "File path "+pcap+" does not exist."
+    return
+
+if __name__ == "__main__":
+    test_counterlog()
