@@ -1,5 +1,6 @@
 from __future__ import division
 from scapy.all import *
+import numpy as np
 import time, sys
 from collections import defaultdict, Counter
 from pprint import pprint
