@@ -2,6 +2,7 @@ from __future__ import division
 from scapy.all import *
 import numpy as np
 import time, sys
+import json
 from collections import defaultdict, Counter
 from pprint import pprint
 
@@ -9,6 +10,7 @@ from pprint import pprint
 class PktFeaturizer:
 
     def __init__(self, pkt):
+        self.direction = -1    # default = -1, UP = 1, DW = 0
         self.arrival_time = pkt.time
         self.len_bytes = len(pkt)
         self.pkt_type, self.features = "other", {}
@@ -34,6 +36,10 @@ class PktFeaturizer:
             self.pkt_type, self.features = Dot11, self.Dot11features(pkt)
         elif pkt.haslayer(Dot3):
             self.pkt_type, self.features = Dot3, self.Dot3features(pkt)
+
+    def _set_direction(self, direction):
+        '''direction -1 if not related to device HW MAC address; 0 for down to device; 1 for up from device'''
+        self.direction = direction
 
     def ICMPfeatures(self, pkt):
         icmp_features = {
@@ -153,6 +159,8 @@ class PktFeaturizer:
             }
         return dot11_features
 
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 def test_pktfeaturizer(pkt):
     features = PktFeaturizer(pkt)
