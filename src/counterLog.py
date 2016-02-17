@@ -14,7 +14,7 @@ class CounterLog:
         self.pcap_summary = defaultdict(int)
         pass
 
-    def identify_device(self, pkt):
+    def identify_direction(self, pkt):
         return pkt.src
 
     def pkt_feature(self, pkt):
