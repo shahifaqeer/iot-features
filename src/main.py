@@ -85,7 +85,9 @@ def main():
         sys.exit()
 
     if options.outputFolder is None:
-        options.outputFolder = "output"
+        options.outputFolder = "output/"
+    if options.outputFolder[-1] != '/':
+        options.outputFolder+'/'    #make sure it ends in a /
     if not os.path.exists(options.outputFolder):
         try:
             os.makedirs(options.outputFolder)
@@ -113,18 +115,18 @@ def main():
 
     # Summary on top of device pkts extracted
     if options.summary=='counter' or options.summary=='all':
-        print "Run CounterLog(). Save to "+options.outputFolder+"/counter.log"
+        print "Run CounterLog(). Save to "+options.outputFolder+"counter.log"
         #CounterLog().run(pkt_list)
     if options.summary=='dns' or options.summary=='all':
-        print "Run DNSLog(). Save to "+options.outputFolder+"/dns.log"
+        print "Run DNSLog(). Save to "+options.outputFolder+"dns.log"
         #DNSLog().run(pkt_list)
     if options.summary=='flow' or options.summary=='all':
-        print "Run FlowLog(). Save to "+options.outputFolder+"/flow.log"
+        print "Run FlowLog(). Save to "+options.outputFolder+"flow.log"
         #FlowLog().run(pkt_list)
     if options.summary=='none':
-        print "Save pkt_list to "+options.outputFolder+"/pkt_list.log"
+        print "Save pkt_list to "+options.outputFolder+"pkt_list.log"
         # TODO doesn't work due to serialization problem / dict of dict -> json
-        with open('pkt_list.json', 'w') as outfile:
+        with open(options.outputFolder + 'pkt_list.log', 'w') as outfile:
             for pkt_features in pkt_list:
                 json.dump(pkt_features.to_JSON(), outfile)
 
