@@ -5,7 +5,6 @@ from scapy.all import sniff
 from pktFeaturizer import PktFeaturizer
 #from counterLog import CounterLog
 
-pkt_list = []    # global pkt list to save extracted packet
 
 def mac_addresses():
     mac = {}
@@ -22,9 +21,8 @@ def mac_addresses():
 
     return
 
-def extract_pkt_features(macAddress):
-    global pkt_list
-
+def extract_pkt_features(macAddress, pkt_list):
+    #global pkt_list
     def pkt_featurize(pkt):
         '''extract features from each pkt; add direction feature based on macAddress; append to global pkt_list'''
         UP = 1
@@ -38,8 +36,8 @@ def extract_pkt_features(macAddress):
             pkt_list.append(pkt_info)
     return pkt_featurize
 
-def test_pkt_features(macAddress):
-    global pkt_list
+def test_pkt_features(macAddress, pkt_list):
+    #global pkt_list
     print "Test pkt features"
     print "macAddress", macAddress
     print "pkt_list", pkt_list
@@ -55,6 +53,19 @@ def test_pkt_features(macAddress):
             print "Not a device pkt"
         #print pkt.show()
     return pkt_print
+
+def get_pkt_list(pcapFile, macAddress):
+    pkt_list = []    # global pkt list to save extracted packet
+    sniff(offline=pcapFile, store=0, prn=extract_pkt_features(macAddress, pkt_list))
+    return pkt_list
+
+def test_pkt_list(pcapFile, macAddress):
+    if (pcapFile is None) or (macAddress is None):
+        pcapFile = '../data/smartthings_bg_short.pcap'
+        macAddress = 'd0:52:a8:00:81:b6'
+    pkt_list = []
+    sniff(offline=pcapFile, store=0, prn=test_pkt_features(macAddress, pkt_list))
+    return pkt_list
 
 def main():
 
@@ -110,8 +121,7 @@ def main():
         print "Output all logs"
 
     # MAIN pkt feature extraction
-    sniff(offline=options.pcapFile, store=0, prn=extract_pkt_features(options.macAddress))
-    #sniff(offline=options.pcapFile, store=0, prn=test_pkt_features(options.macAddress))
+    pkt_list = get_pkt_list(options.pcapFile, options.macAddress)
 
     # Summary on top of device pkts extracted
     if options.summary=='counter' or options.summary=='all':
@@ -129,8 +139,9 @@ def main():
         with open(options.outputFolder + 'pkt_list.log', 'w') as outfile:
             for pkt_features in pkt_list:
                 json.dump(pkt_features.to_JSON(), outfile)
-
     return
 
 if __name__ == "__main__":
-    main()
+    #pkt_list = test_pkt_list('../data/smartthings_bg_short.pcap', 'd0:52:a8:00:81:b6')
+    pkt_list = get_pkt_list('../data/smartthings_bg_short.pcap', 'd0:52:a8:00:81:b6')
+    #main()
