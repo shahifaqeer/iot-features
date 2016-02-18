@@ -14,6 +14,7 @@ class PktFeaturizer:
         self.arrival_time = pkt.time
         self.len_bytes = len(pkt)
         self.pkt_type, self.features = "other", {}
+
         if pkt.haslayer(ICMP):
             self.pkt_type, self.features = ICMP, self.ICMPfeatures(pkt)
         elif pkt.haslayer(DNS):
@@ -36,6 +37,17 @@ class PktFeaturizer:
             self.pkt_type, self.features = Dot11, self.Dot11features(pkt)
         elif pkt.haslayer(Dot3):
             self.pkt_type, self.features = Dot3, self.Dot3features(pkt)
+
+        self._update_meta_features()
+
+    def _update_meta_features(self):
+        meta_features = {
+            "arrival_time": self.arrival_time,
+            "len_bytes": self.len_bytes,
+            "direction": self.direction,
+            "pkt_type": self.pkt_type.name,
+            }
+        self.features.update(meta_features)
 
     def _set_direction(self, direction):
         '''direction -1 if not related to device HW MAC address; 0 for down to device; 1 for up from device'''
@@ -160,7 +172,8 @@ class PktFeaturizer:
         return dot11_features
 
     def to_JSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        return json.dumps(self.features)
+        #return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 def test_pktfeaturizer(pkt):
     features = PktFeaturizer(pkt)
