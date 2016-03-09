@@ -58,13 +58,13 @@ class CounterLog:
             #print "\n"
         return
 
-    def to_JSON(self, outputFolder):
+    def to_JSON(self, outputFolder, outputfile):
         if outputFolder[-1]!='/':
             outputFolder += '/'
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
 
-        with open(outputFolder + 'counter.log', 'w') as outfile:
+        with open(outputFolder + outputfile, 'w') as outfile:
             json.dump(self.pcap_summary, outfile)
             #print self.pcap_summary
 
@@ -75,16 +75,17 @@ class CounterLog:
         #print "Feature: Counter { feature_value: packet_count, ... }"
         #print "------\n"
         self.summarize()
-        self.to_JSON(outputFolder)
+        self.to_JSON(outputFolder, outputfile)
 
 
 def test_counterlog(pkt_list=None):
     if pkt_list is None:
         pcapFile = '../data/smartthings_bg_short.pcap'
         macAddress = 'd0:52:a8:00:81:b6'
-        outputFolder = 'output_test'
         pkt_list = utils.get_pkt_list(pcapFile, macAddress)
-    CounterLog().run(pkt_list, outputFolder)
+    outputFolder = 'output_test'
+    outputfile = 'counter.log'
+    CounterLog().run(pkt_list, outputFolder, outputfile)
     return
 
 if __name__ == "__main__":
