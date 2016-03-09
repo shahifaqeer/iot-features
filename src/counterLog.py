@@ -1,14 +1,14 @@
 from __future__ import division
-from scapy.all import *
 import numpy as np
-import time, sys
+import time, sys, os
 import json
 from collections import defaultdict, Counter
 from pprint import pprint
 from pktFeaturizer import PktFeaturizer
-from main import get_pkt_list   # for testing purposes
+import utils
 
 DECIMAL_PLACES = 1  #for calculating gap between packets (s) from arrival time
+
 
 class CounterLog:
 
@@ -83,7 +83,7 @@ def test_counterlog(pkt_list=None):
         pcapFile = '../data/smartthings_bg_short.pcap'
         macAddress = 'd0:52:a8:00:81:b6'
         outputFolder = 'output_test'
-        pkt_list = get_pkt_list(pcapFile, macAddress)
+        pkt_list = utils.get_pkt_list(pcapFile, macAddress)
     CounterLog().run(pkt_list, outputFolder)
     return
 
