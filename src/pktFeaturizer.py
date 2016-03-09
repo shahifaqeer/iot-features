@@ -52,6 +52,7 @@ class PktFeaturizer:
     def _set_direction(self, direction):
         '''direction -1 if not related to device HW MAC address; 0 for down to device; 1 for up from device'''
         self.direction = direction
+        self._update_meta_features()
 
     def ICMPfeatures(self, pkt):
         icmp_features = {
