@@ -57,6 +57,10 @@ def main():
         options.deltaTime = 172800.0
         print "Set deltaTime to " + options.deltaTime
 
+    if (options.period is None) or (options.period <= 0):
+        options.period = 1.0
+        print "Set period to " + options.period
+
     if (options.summary is None):
         options.summary = 'all'
         print "Output all logs"
@@ -72,8 +76,8 @@ def main():
         print "Run DNSLog(). Save to "+options.outputFolder+"dns.log"
         #DNSLog().run(pkt_list)
     if options.summary=='flow' or options.summary=='all':
-        print "Run FlowLog(). Save to "+options.outputFolder+"flow.log"
-        #FlowLog().run(pkt_list)
+        print "Run FlowLog(time_period). Save to "+options.outputFolder+"flow.log"
+        FlowLog(options.period).run(pkt_list)
     if options.summary=='none':
         print "Save pkt_list to "+options.outputFolder+"pkt_list.log"
         # TODO doesn't work due to serialization problem / dict of dict -> json
