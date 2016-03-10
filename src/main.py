@@ -10,7 +10,7 @@ import utils
 
 def main():
 
-    parser = optparse.OptionParser(usage='python %prog -r pcapFile -m macAddress [-o outputFolder -t timeStart -d deltaTime -s all|none|count|flow|dns -p period]')
+    parser = optparse.OptionParser(usage='python %prog -r pcapFile -m macAddress [-o outputFolder -t timeStart -d deltaTime -s all|none|count|flow|dns -p period ]\neg: python main.py -r ../data/smartthings_bg_short.pcap -m d0:52:a8:00:81:b6 -o ../processed/smartthings_bg_d1800_p1/ -t 100.0 -d 1800.0 -s all -p 1.0')
     #parser.add_option('-h', '--help')
     parser.add_option('-r', '--pcapFile', dest='pcapFile', help="(required) input pcap file path" )
     parser.add_option('-m', '--macAddress', dest='macAddress', help="(required) MAC address of IoT device to decide direction. Please input address in format xx:xx:xx:xx:xx:xx." )
