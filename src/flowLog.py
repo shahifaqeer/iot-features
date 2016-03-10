@@ -1,10 +1,8 @@
 from __future__ import division
-from scapy.all import *
 import numpy as np
-import time, sys
-import json
+import pandas as pd
+import json, os
 from collections import defaultdict, Counter
-from pprint import pprint
 from pktFeaturizer import PktFeaturizer
 import utils
 
@@ -33,20 +31,30 @@ class FlowLog:
     def extract_flowtuple_per_pkt(self, pkt_info):
         '''flow tuple is a dict containing extracted flow info from a pkt used to get the matrix'''
         flow_tuple = {}
-        if pkt_info.features['pkt_type'] == 'TCP' or pkt_info.features['pkt_type'] == 'UDP':
-            flow_tuple['proto'] = pkt_info.features['pkt_type']
+        if pkt_info.features['pkt_type'] in ['TCP', 'UDP', 'ICMP', 'DHCP']:     # concentrate on these 4 pkt types only
+            proto = pkt_info.features['pkt_type']
+            flow_tuple['proto'] = proto
             flow_tuple['srcip'] = pkt_info.features['IP src']
             flow_tuple['dstip'] = pkt_info.features['IP dst']
-            flow_tuple['sport'] = pkt_info.features[proto + ' sport']
-            flow_tuple['dport'] = pkt_info.features[proto + ' dport']
+            if proto == 'UDP' or proto == 'DHCP':   # dhcp uses udp ports
+                flow_tuple['sport'] = int(pkt_info.features['UDP sport'])
+                flow_tuple['dport'] = int(pkt_info.features['UDP dport'])
+            elif proto == 'TCP':
+                flow_tuple['sport'] = int(pkt_info.features['TCP sport'])
+                flow_tuple['dport'] = int(pkt_info.features['TCP dport'])
+            else:   # icmp has no port nums
+                flow_tuple['sport'] = -1
+                flow_tuple['dport'] = -1
+
             try:
                 flow_tuple['pkt_time'] = float(pkt_info.features['arrival_time'])
                 flow_tuple['pkt_rel_time'] = float(pkt_info.features['arrival_time']) - self.time_init  # take relative time instead of absolute time
                 flow_tuple['direction'] = int(pkt_info.features['direction'])
                 flow_tuple['pkt_len'] = int(pkt_info.features['len_bytes'])
             except:
-                print "flow_tuple", flow_tuple
+                print "Error extracting flow_tuple", flow_tuple
                 print pkt_info.to_JSON()
+            #print flow_tuple
         return flow_tuple
 
     def count_flowtuple_per_timeperiod(self, pkt_list):
@@ -61,17 +69,22 @@ class FlowLog:
 
         for pkt_info in pkt_list:
             flow_tuple = self.extract_flowtuple_per_pkt(pkt_info)
-            if not flow_tuple:  # check if dict is not empty
+            if flow_tuple:  # check if dict is not empty
                 flow_tuple1 = (flow_tuple['srcip'], flow_tuple['sport'], flow_tuple['dstip'], flow_tuple['dport'], flow_tuple['proto'], flow_tuple['direction'], flow_tuple['pkt_len'])
                 flow_tuple2 = (flow_tuple['srcip'], flow_tuple['sport'], flow_tuple['dstip'], flow_tuple['dport'], flow_tuple['proto'], flow_tuple['direction'])
+                print flow_tuple
 
+                #TODO ERROR HERE - only first packet is getting recorded in counters
                 tstop = tstart + self.time_period
-                if flow_tuple['pkt_rel_time'] < tstop:     # assumes that pkt_time >= tstart implicitly
+                if (flow_tuple['pkt_rel_time'] >= tstart) and (flow_tuple['pkt_rel_time'] < tstop):     # assumes that pkt_time >= tstart implicitly
                     pkt_counter[flow_tuple1] += 1
                     byte_counter[flow_tuple2] += flow_tuple['pkt_len']
                 else:
+                    #print pkt_counter, byte_counter
                     self.update_flowtuple1_counts(pkt_counter, tstart)
                     self.update_flowtuple2_bytes(byte_counter, tstart)
+                    pkt_counter = defaultdict(int)
+                    byte_counter = defaultdict(int)
                     tstart = tstop
 
     def update_flowtuple1_counts(self, pkt_counter, time_index):
@@ -110,8 +123,8 @@ class FlowLog:
 
         df_pkt_counter = pd.DataFrame(self.pkt_counter).pivot(index='time', columns='flow', values='count')
         df_byte_counter = pd.DataFrame(self.byte_counter).pivot(index='time', columns='flow', values='bytes')
-        print df_pkt_counter.head()
-        print df_byte_counter.head()
+        print "df_pkt_counter", df_pkt_counter.head()
+        print "df_byte_counter", df_byte_counter.head()
 
         df_pkt_counter.to_pickle(outputFolder + 'df_pkt_counter.pkl')
         df_byte_counter.to_pickle(outputFolder + 'df_byte_counter.pkl')
