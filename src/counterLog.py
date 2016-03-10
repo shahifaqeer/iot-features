@@ -42,7 +42,7 @@ class CounterLog:
             #print pkt_type, pkt_type.name
 
             for feature_name, feature_list in sorted(feature.iteritems()):
-                if feature_name == 'arrival_time':
+                if feature_name == 'arrival_time':  # calculate time diff
                     rounded_diff = [round(diff, DECIMAL_PLACES) for diff in np.diff(feature_list)]
                     feature_summary = Counter(rounded_diff)
                     feature_name = 'diff_arrival_time'

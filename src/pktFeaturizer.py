@@ -56,8 +56,8 @@ class PktFeaturizer:
 
     def ICMPfeatures(self, pkt):
         icmp_features = {
-            "ICMP type": pkt[ICMP].type,
-            "ICMP code": pkt[ICMP].code,
+            "ICMP.type": pkt[ICMP].type,
+            "ICMP.code": pkt[ICMP].code,
             }
         if pkt.haslayer(IP) or pkt.haslayer(IPv6):
             icmp_features.update(self.IPfeatures(pkt))
@@ -65,11 +65,11 @@ class PktFeaturizer:
 
     def DNSfeatures(self, pkt):
         dns_features = {
-            "DNS recursion-desired": pkt[DNS].rd,
-            "DNS question-count": pkt[DNS].qdcount,
-            "DNS question-name": pkt[DNS].qd.qname,
-            "DNS question-type": pkt[DNS].qd.qtype,
-            "DNS question-class": pkt[DNS].qd.qclass
+            "DNS.recursion-desired": pkt[DNS].rd,
+            "DNS.question-count": pkt[DNS].qdcount,
+            "DNS.question-name": pkt[DNS].qd.qname,
+            "DNS.question-type": pkt[DNS].qd.qtype,
+            "DNS.question-class": pkt[DNS].qd.qclass
             }
         if pkt.haslayer(UDP):
             dns_features.update(self.UDPfeatures(pkt))
@@ -77,8 +77,8 @@ class PktFeaturizer:
 
     def STPfeatures(self, pkt):
         stp_features = {
-            "STP proto":   pkt[STP].proto,
-            "STP version": pkt[STP].version,
+            "STP.proto":   pkt[STP].proto,
+            "STP.version": pkt[STP].version,
             }
         if pkt.haslayer(Dot3):
             stp_features.update(self.Dot3features(pkt))
@@ -88,7 +88,7 @@ class PktFeaturizer:
         dhcp_features = {}
         for option in pkt[DHCP].options:
             if len(option)==2:
-                dhcp_features.update({"DHCP "+option[0] : option[1]})
+                dhcp_features.update({"DHCP."+option[0] : option[1]})
 
         if pkt.haslayer(UDP):
             dhcp_features.update(self.UDPfeatures(pkt))
@@ -96,8 +96,8 @@ class PktFeaturizer:
 
     def TCPfeatures(self, pkt):
         tcp_features = {
-            "TCP sport": pkt[TCP].sport,
-            "TCP dport": pkt[TCP].dport,
+            "TCP.sport": pkt[TCP].sport,
+            "TCP.dport": pkt[TCP].dport,
             }
         if (pkt.haslayer(IP) or pkt.haslayer(IPv6)):
             tcp_features.update(self.IPfeatures(pkt))
@@ -105,9 +105,9 @@ class PktFeaturizer:
 
     def UDPfeatures(self, pkt):
         udp_features = {
-            "UDP sport": pkt[UDP].sport,
-            "UDP dport": pkt[UDP].dport,
-            "UDP len":   pkt[UDP].len,
+            "UDP.sport": pkt[UDP].sport,
+            "UDP.dport": pkt[UDP].dport,
+            "UDP.len":   pkt[UDP].len,
             }
         if (pkt.haslayer(IP) or pkt.haslayer(IPv6)):
             udp_features.update(self.IPfeatures(pkt))
@@ -116,15 +116,15 @@ class PktFeaturizer:
     def IPfeatures(self, pkt):
         if pkt.haslayer(IP):
             ip_features = {
-                "IP src": pkt[IP].src,
-                "IP dst": pkt[IP].dst,
-                "IP len": pkt[IP].len,
+                "IP.src": pkt[IP].src,
+                "IP.dst": pkt[IP].dst,
+                "IP.len": pkt[IP].len,
                 }
         else:
             ip_features = {
-                "IP src": pkt[IPv6].src,
-                "IP dst": pkt[IPv6].dst,
-                "IP plen": pkt[IPv6].plen
+                "IP.src": pkt[IPv6].src,
+                "IP.dst": pkt[IPv6].dst,
+                "IP.plen": pkt[IPv6].plen
                 }
 
         if pkt.haslayer(Ether):
@@ -137,12 +137,12 @@ class PktFeaturizer:
 
     def ARPfeatures(self, pkt):
         arp_features = {
-            "ARP hwtype": pkt[ARP].hwtype,
-            "ARP ptype":  pkt[ARP].ptype,
-            "ARP hwsrc":  pkt[ARP].hwsrc,
-            "ARP psrc":   pkt[ARP].psrc,
-            "ARP hwdst":  pkt[ARP].hwdst,
-            "ARP pdst":   pkt[ARP].pdst,
+            "ARP.hwtype": pkt[ARP].hwtype,
+            "ARP.ptype":  pkt[ARP].ptype,
+            "ARP.hwsrc":  pkt[ARP].hwsrc,
+            "ARP.psrc":   pkt[ARP].psrc,
+            "ARP.hwdst":  pkt[ARP].hwdst,
+            "ARP.pdst":   pkt[ARP].pdst,
             }
         if pkt.haslayer(Ether):
             arp_features.update(self.Etherfeatures(pkt))
@@ -154,16 +154,16 @@ class PktFeaturizer:
 
     def Etherfeatures(self, pkt):
         ether_features = {
-            "Ether src":  pkt[Ether].src,
-            "Ether dst":  pkt[Ether].dst,
-            "Ether type": pkt[Ether].type,
+            "Ether.src":  pkt[Ether].src,
+            "Ether.dst":  pkt[Ether].dst,
+            "Ether.type": pkt[Ether].type,
             }
         return ether_features
 
     def Dot3features(self, pkt):
         dot3_features = {
-            "802.3 src":  pkt[Dot3].src,
-            "802.3 dst":  pkt[Dot3].dst,
+            "802.3.src":  pkt[Dot3].src,
+            "802.3.dst":  pkt[Dot3].dst,
             }
         return dot3_features
 
