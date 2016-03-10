@@ -68,7 +68,7 @@ class CounterLog:
             json.dump(self.pcap_summary, outfile)
             #print self.pcap_summary
 
-    def run(self, pkt_list, outputFolder):
+    def run(self, pkt_list, outputFolder, outputfile):
         self.sort_pkt_features_by_type(pkt_list)
         #print "--Summary--"
         #print "[Pkt Type]"
