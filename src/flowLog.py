@@ -127,8 +127,9 @@ class FlowLog:
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
 
-        df_pkt_counter = pd.DataFrame(self.pkt_counter).pivot(index='time', columns='flow', values='count')
-        df_byte_counter = pd.DataFrame(self.byte_counter).pivot(index='time', columns='flow', values='bytes')
+        # convert dict to pivoted dataframe and fill with zeros to generate the matrix for PCA
+        df_pkt_counter = pd.DataFrame(self.pkt_counter).pivot(index='time', columns='flow', values='count').fillna(0)
+        df_byte_counter = pd.DataFrame(self.byte_counter).pivot(index='time', columns='flow', values='bytes').fillna(0)
         #print "df_pkt_counter", df_pkt_counter.head()
         #print "df_byte_counter", df_byte_counter.head()
 
