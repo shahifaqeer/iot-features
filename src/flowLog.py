@@ -64,6 +64,7 @@ class FlowLog:
         self._set_time_init( float( pkt_list[0].features['arrival_time'] ) )    # Assuming pkts are in increasing time order
 
         tstart = 0.0
+        tstop = tstart + self.time_period
         pkt_counter = defaultdict(int)
         byte_counter = defaultdict(int)
 
@@ -72,20 +73,26 @@ class FlowLog:
             if flow_tuple:  # check if dict is not empty
                 flow_tuple1 = (flow_tuple['srcip'], flow_tuple['sport'], flow_tuple['dstip'], flow_tuple['dport'], flow_tuple['proto'], flow_tuple['direction'], flow_tuple['pkt_len'])
                 flow_tuple2 = (flow_tuple['srcip'], flow_tuple['sport'], flow_tuple['dstip'], flow_tuple['dport'], flow_tuple['proto'], flow_tuple['direction'])
-                print flow_tuple
+                #print flow_tuple
 
-                #TODO ERROR HERE - only first packet is getting recorded in counters
-                tstop = tstart + self.time_period
+                #TODO ERROR HERE - why does one flow keep getting repeated???
+                while (flow_tuple['pkt_rel_time'] >= tstop):
+                    if pkt_counter:
+                        self.update_flowtuple1_counts(pkt_counter, time_index)
+                        print "time_index:", time_index, "pkt_counter:", pkt_counter
+                        pkt_counter = defaultdict(int)
+                    if byte_counter:
+                        self.update_flowtuple2_bytes(byte_counter, time_index)
+                        #print "time_index:", time_index, "byte_counter:", byte_counter
+                        byte_counter = defaultdict(int)
+                    tstart = tstop
+                    tstop = tstart + self.time_period
+
                 if (flow_tuple['pkt_rel_time'] >= tstart) and (flow_tuple['pkt_rel_time'] < tstop):     # assumes that pkt_time >= tstart implicitly
                     pkt_counter[flow_tuple1] += 1
                     byte_counter[flow_tuple2] += flow_tuple['pkt_len']
-                else:
-                    #print pkt_counter, byte_counter
-                    self.update_flowtuple1_counts(pkt_counter, tstart)
-                    self.update_flowtuple2_bytes(byte_counter, tstart)
-                    pkt_counter = defaultdict(int)
-                    byte_counter = defaultdict(int)
-                    tstart = tstop
+                    time_index = tstart
+
 
     def update_flowtuple1_counts(self, pkt_counter, time_index):
         """convert (pkt_counter{ [flow]: count }, time_index) --> self.pkt_counter
