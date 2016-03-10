@@ -119,12 +119,13 @@ class PktFeaturizer:
                 "IP src": pkt[IP].src,
                 "IP dst": pkt[IP].dst,
                 "IP len": pkt[IP].len,
+                "IP proto": pkt[IP].proto,
                 }
         else:
             ip_features = {
                 "IP src": pkt[IPv6].src,
                 "IP dst": pkt[IPv6].dst,
-                "IP plen": pkt[IPv6].plen
+                "IP plen": pkt[IPv6].plen,
                 }
 
         if pkt.haslayer(Ether):
