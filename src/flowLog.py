@@ -75,11 +75,10 @@ class FlowLog:
                 flow_tuple2 = (flow_tuple['srcip'], flow_tuple['sport'], flow_tuple['dstip'], flow_tuple['dport'], flow_tuple['proto'], flow_tuple['direction'])
                 #print flow_tuple
 
-                #TODO ERROR HERE - why does one flow keep getting repeated???
                 while (flow_tuple['pkt_rel_time'] >= tstop):
                     if pkt_counter:
                         self.update_flowtuple1_counts(pkt_counter, time_index)
-                        print "time_index:", time_index, "pkt_counter:", pkt_counter
+                        #print "time_index:", time_index, "pkt_counter:", pkt_counter
                         pkt_counter = defaultdict(int)
                     if byte_counter:
                         self.update_flowtuple2_bytes(byte_counter, time_index)
@@ -130,8 +129,8 @@ class FlowLog:
 
         df_pkt_counter = pd.DataFrame(self.pkt_counter).pivot(index='time', columns='flow', values='count')
         df_byte_counter = pd.DataFrame(self.byte_counter).pivot(index='time', columns='flow', values='bytes')
-        print "df_pkt_counter", df_pkt_counter.head()
-        print "df_byte_counter", df_byte_counter.head()
+        #print "df_pkt_counter", df_pkt_counter.head()
+        #print "df_byte_counter", df_byte_counter.head()
 
         df_pkt_counter.to_pickle(outputFolder + 'df_pkt_counter.pkl')
         df_byte_counter.to_pickle(outputFolder + 'df_byte_counter.pkl')
