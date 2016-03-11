@@ -1,0 +1,21 @@
+nest
+cp 1448061849.pcap ../../iot-features/data/nest_bg_2days.pcap
+cp 1448223207.pcap ../../iot-features/data/nest_manual_4mins.pcap
+
+echo
+cp 1455151444.pcap ../../iot-features/data/echo_bg_1day.pcap
+cp 1448044433.pcap ../../iot-features/data/echo_set_timer_5times.pcap
+
+ipcam
+cp 1455139871.pcap ../../iot-features/data/ipcam_bg_alarm_1hr.pcap
+cp 1455144105.pcap ../../iot-features/data/ipcam_bg_10min_1hr.pcap
+
+smartthings
+cp 1455331712.pcap ../../iot-features/data/smartthings_bg_8hr_kevins.pcap
+cp 1455507060.pcap ../../iot-features/data/smartthings_socket_9times_kevins.pcap
+cp 1455505744.pcap ../../iot-features/data/smartthings_door_9times_kevins.pcap
+cp 1446051892.pcap ../../iot-features/data/smartthings_bg_2hrs_lab.pcap
+
+echo_with_ipcam
+cp 1455854206.pcap ../../iot-features/data/echo_ipcam_bg_10hr_kevins.pcap
+cp 1455921150.pcap ../../iot-features/data/echo_ipcam_activity_15mins_kevins.pcap
