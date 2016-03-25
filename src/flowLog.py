@@ -118,7 +118,7 @@ class FlowLog:
             os.makedirs(outputFolder)
 
         with open(outputFolder + outputfile, 'w') as outfile:
-            json.dump({'pkt_counter':self.pkt_counter, 'byte_counter':self.byte_counter}, outfile)
+            json.dump({'pkt_counter':self.pkt_counter, 'byte_counter':self.byte_counter}, outfile, encoding='latin1')
 
     def to_DataFrame(self, outputFolder):
         '''convert to pivoted dataframe ready for PCA analysis'''

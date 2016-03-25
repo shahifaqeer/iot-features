@@ -65,7 +65,7 @@ class CounterLog:
             os.makedirs(outputFolder)
 
         with open(outputFolder + outputfile, 'w') as outfile:
-            json.dump(self.pcap_summary, outfile)
+            json.dump(self.pcap_summary, outfile, encoding='latin1')
             #print self.pcap_summary
 
     def run(self, pkt_list, outputFolder, outputfile):
