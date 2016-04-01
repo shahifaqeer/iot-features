@@ -31,20 +31,26 @@ class FlowLog:
     def extract_flowtuple_per_pkt(self, pkt_info):
         '''flow tuple is a dict containing extracted flow info from a pkt used to get the matrix'''
         flow_tuple = {}
-        if pkt_info.features['pkt_type'] in ['TCP', 'UDP', 'ICMP', 'DHCP']:     # concentrate on these 4 pkt types only
+        if pkt_info.features['pkt_type'] in ['TCP', 'UDP', 'ICMP', 'DHCP', 'DNS', 'ARP', 'NTP']:     # concentrate on these 4 pkt types only
             proto = pkt_info.features['pkt_type']
             flow_tuple['proto'] = proto
-            flow_tuple['srcip'] = pkt_info.features['IP src']
-            flow_tuple['dstip'] = pkt_info.features['IP dst']
-            if proto == 'UDP' or proto == 'DHCP':   # dhcp uses udp ports
+
+            if proto == 'ARP':
+                flow_tuple['srcip'] = np.nan
+                flow_tuple['dstip'] = np.nan
+            else:
+                flow_tuple['srcip'] = pkt_info.features['IP src']
+                flow_tuple['dstip'] = pkt_info.features['IP dst']
+
+            if proto in ['UDP', 'DHCP', 'DNS', 'NTP']:   # dhcp, ntp, dns uses udp
                 flow_tuple['sport'] = int(pkt_info.features['UDP sport'])
                 flow_tuple['dport'] = int(pkt_info.features['UDP dport'])
             elif proto == 'TCP':
                 flow_tuple['sport'] = int(pkt_info.features['TCP sport'])
                 flow_tuple['dport'] = int(pkt_info.features['TCP dport'])
-            else:   # icmp has no port nums
-                flow_tuple['sport'] = -1
-                flow_tuple['dport'] = -1
+            else:   # icmp and arp have no port nums
+                flow_tuple['sport'] = np.nan
+                flow_tuple['dport'] = np.nan
 
             try:
                 flow_tuple['pkt_time'] = float(pkt_info.features['arrival_time'])
