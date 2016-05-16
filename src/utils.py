@@ -10,6 +10,7 @@ def mac_addresses():
     mac['Pixstar Photoframe'] = 'b4:ab:2c:08:3c:f8'
     mac['Ubi'] = '6c:fa:a7:15:dd:ab'
     mac['Sharx IPCam'] = '00:e0:4c:b7:3c:d2'
+    mac['Nest Cam'] = '18:b4:30:54:dd:0c'
 
     print "Known MAC addresses"
     for dev, addr in mac.iteritems():
